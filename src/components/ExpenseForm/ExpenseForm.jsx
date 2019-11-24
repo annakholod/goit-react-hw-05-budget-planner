@@ -7,7 +7,12 @@ import Form from '../../shared/Form/Form';
 import Label from '../../shared/Label/Label';
 import Input from '../../shared/Input/Input';
 import Button from '../../shared/Button/Button';
-import { notifySumMoreBalance, notifyEmptyInput } from '../../helpers/helpers';
+import {
+  notifySumMoreBalance,
+  notifyEmptyInput,
+  notifyMinus,
+  notifyEmptyExpName,
+} from '../../helpers/helpers';
 
 const labelStyles = `
   margin-bottom: 16px;
@@ -29,15 +34,23 @@ const ExpenseForm = ({
       ...currentExpense,
       id: shortid.generate(),
     };
-    if (amount && amount !== '0') {
-      if (amount <= balance) {
-        addExpense(expense);
-        clearInput();
+    if (name === '') {
+      notifyEmptyExpName();
+      return;
+    }
+    if (!amount.includes('-')) {
+      if (amount && amount !== '0') {
+        if (amount <= balance) {
+          addExpense(expense);
+          clearInput();
+        } else {
+          notifySumMoreBalance();
+        }
       } else {
-        notifySumMoreBalance();
+        notifyEmptyInput();
       }
     } else {
-      notifyEmptyInput();
+      notifyMinus();
     }
   };
 

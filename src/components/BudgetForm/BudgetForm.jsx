@@ -4,7 +4,7 @@ import Form from '../../shared/Form/Form';
 import Label from '../../shared/Label/Label';
 import Input from '../../shared/Input/Input';
 import Button from '../../shared/Button/Button';
-import { notifyEmptyBalance } from '../../helpers/helpers';
+import { notifyEmptyBalance, notifyMinus } from '../../helpers/helpers';
 
 const labelStyles = `
   margin-bottom: 16px;  
@@ -13,10 +13,14 @@ const labelStyles = `
 const BudgetForm = ({ budgetInput, changeBudget, clearInput, addBudget }) => {
   const handleSubmit = evt => {
     evt.preventDefault();
-    if (budgetInput && budgetInput !== '0') {
-      addBudget(budgetInput);
+    if (!budgetInput.includes('-')) {
+      if (budgetInput && budgetInput !== '0') {
+        addBudget(budgetInput);
+      } else {
+        notifyEmptyBalance();
+      }
     } else {
-      notifyEmptyBalance();
+      notifyMinus();
     }
     clearInput();
   };
